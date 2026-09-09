@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>Sign Up - Mini Netflix</title>
+
+<style>
+
+body {
+    background: #111;
+    color: white;
+    font-family: Arial;
+    text-align: center;
+}
+
+.logo {
+    color: red;
+    font-size: 40px;
+    font-weight: bold;
+    margin-top: 50px;
+}
+
+.box {
+    background: #222;
+    width: 350px;
+    margin: 50px auto;
+    padding: 40px;
+    border-radius: 10px;
+}
+
+input {
+    width: 90%;
+    padding: 13px;
+    margin: 10px;
+}
+
+button {
+    width: 98%;
+    padding: 13px;
+    background: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+a {
+    color: white;
+}
+
+.error {
+    color: #ff5555;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="logo">
+MINI NETFLIX
+</div>
+
+
+<div class="box">
+
+<h2>Create Account</h2>
+
+
+{% if message %}
+
+<p class="error">
+{{ message }}
+</p>
+
+{% endif %}
+
+
+<form method="POST">
+
+<input
+type="text"
+name="name"
+placeholder="Your Name"
+required>
+
+
+<input
+type="email"
+name="email"
+placeholder="Email"
+required>
+
+
+<input
+type="password"
+name="password"
+placeholder="Password"
+minlength="6"
+required>
+
+
+<br><br>
+
+
+<button type="submit">
+Sign Up
+</button>
+
+
+</form>
+
+
+<br>
+
+
+<p>
+Already have an account?
+<a href="/login">
+Login
+</a>
+</p>
+
+
+</div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>My List</title>
+
+<style>
+
+body {
+    background: #111;
+    color: white;
+    font-family: Arial;
+    padding: 40px;
+}
+
+h1 {
+    color: red;
+}
+
+.movie {
+    background: #222;
+    padding: 20px;
+    margin: 15px;
+    width: 300px;
+    border-radius: 10px;
+}
+
+.movies {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+button {
+    padding: 10px;
+    cursor: pointer;
+}
+
+a {
+    color: white;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<h1>
+My List
+</h1>
+
+
+<a href="/browse">
+← Back to Movies
+</a>
+
+
+<div class="movies">
+
+
+{% for item in items %}
+
+
+<div class="movie">
+
+
+<h2>
+{{ item.movies.title }}
+</h2>
+
+
+<p>
+{{ item.movies.genre }}
+</p>
+
+
+<p>
+{{ item.movies.year }}
+</p>
+
+
+<a href="/watch/{{ item.movie_id }}">
+
+<button>
+▶ Play
+</button>
+
+</a>
+
+
+<form
+action="/remove/{{ item.movie_id }}"
+method="POST">
+
+<button type="submit">
+Remove
+</button>
+
+</form>
+
+
+</div>
+
+
+{% endfor %}
+
+
+</div>
+
+
+</body>
+
+</html>

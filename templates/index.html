@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>Mini Netflix</title>
+
+<style>
+
+body {
+    background: #111;
+    color: white;
+    font-family: Arial;
+    margin: 0;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    padding: 25px 50px;
+}
+
+.logo {
+    color: red;
+    font-size: 30px;
+    font-weight: bold;
+    margin-right: 40px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin-right: 25px;
+}
+
+.user {
+    margin-left: auto;
+}
+
+.movies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    padding: 40px;
+}
+
+.movie {
+    background: #222;
+    width: 230px;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.movie:hover {
+    transform: scale(1.03);
+}
+
+button {
+    padding: 10px;
+    margin-top: 7px;
+    cursor: pointer;
+}
+
+.play {
+    background: white;
+    border: none;
+}
+
+.add {
+    background: red;
+    color: white;
+    border: none;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<nav>
+
+<div class="logo">
+MINI NETFLIX
+</div>
+
+
+<a href="/browse">
+Home
+</a>
+
+
+<a href="/my-list">
+My List
+</a>
+
+
+<a href="/logout">
+Logout
+</a>
+
+
+<div class="user">
+
+Hello,
+{{ session.get("name") }}
+
+</div>
+
+
+</nav>
+
+
+<div class="movies">
+
+
+{% for movie in movies %}
+
+
+<div class="movie">
+
+
+<h2>
+{{ movie.title }}
+</h2>
+
+
+<p>
+Genre: {{ movie.genre }}
+</p>
+
+
+<p>
+Year: {{ movie.year }}
+</p>
+
+
+<a href="/watch/{{ movie.movie_id }}">
+
+<button class="play">
+▶ Play
+</button>
+
+</a>
+
+
+<form
+action="/add/{{ movie.movie_id }}"
+method="POST">
+
+<button
+class="add"
+type="submit">
+
++ My List
+
+</button>
+
+</form>
+
+
+</div>
+
+
+{% endfor %}
+
+
+</div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>{{ movie.title }}</title>
+
+<style>
+
+body {
+    background: #111;
+    color: white;
+    font-family: Arial;
+    text-align: center;
+}
+
+h1 {
+    color: red;
+}
+
+video {
+    width: 80%;
+    max-width: 900px;
+}
+
+a {
+    color: white;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<h1>
+{{ movie.title }}
+</h1>
+
+
+<p>
+{{ movie.genre }} | {{ movie.year }}
+</p>
+
+
+{% if movie.video_url %}
+
+
+<video controls>
+
+<source
+src="{{ movie.video_url }}"
+type="video/mp4">
+
+</video>
+
+
+{% else %}
+
+
+<h3>
+Video hasn't been added yet.
+</h3>
+
+
+{% endif %}
+
+
+<br><br>
+
+
+<a href="/browse">
+← Back to Movies
+</a>
+
+
+</body>
+
+</html>
