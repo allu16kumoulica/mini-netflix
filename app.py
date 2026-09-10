@@ -25,11 +25,9 @@ supabase = create_client(
 @app.route("/")
 def home():
 
-    # Already logged in
     if "user_id" in session:
         return redirect(url_for("browse"))
 
-    # Not logged in
     return render_template("welcome.html")
 
 
@@ -59,7 +57,6 @@ def signup():
 
                 auth_user_id = str(auth_response.user.id)
 
-                # Check whether profile already exists
                 existing = (
                     supabase
                     .table("users")
@@ -81,7 +78,6 @@ def signup():
             message = "Could not create account."
 
         except Exception as e:
-
             message = str(e)
 
     return render_template(
@@ -106,12 +102,10 @@ def login():
 
         try:
 
-            auth_response = (
-                supabase.auth.sign_in_with_password({
-                    "email": email,
-                    "password": password
-                })
-            )
+            auth_response = supabase.auth.sign_in_with_password({
+                "email": email,
+                "password": password
+            })
 
             if auth_response.user and auth_response.session:
 
@@ -136,16 +130,12 @@ def login():
 
                     return redirect(url_for("browse"))
 
-                else:
-
-                    message = "User profile was not found."
+                message = "User profile was not found."
 
             else:
-
                 message = "Login failed."
 
         except Exception as e:
-
             message = str(e)
 
     return render_template(
@@ -163,7 +153,7 @@ def logout():
 
     try:
         supabase.auth.sign_out()
-    except:
+    except Exception:
         pass
 
     session.clear()
@@ -225,7 +215,6 @@ def add_to_list(movie_id):
             }).execute()
 
     except Exception as e:
-
         return f"Error adding movie: {e}"
 
     return redirect(url_for("browse"))
@@ -259,7 +248,6 @@ def my_list():
         )
 
     except Exception as e:
-
         return f"Error loading My List: {e}"
 
 
@@ -285,7 +273,6 @@ def remove_from_list(movie_id):
         )
 
     except Exception as e:
-
         return f"Error removing movie: {e}"
 
     return redirect(url_for("my_list"))
@@ -314,7 +301,6 @@ def watch_movie(movie_id):
 
         movie = response.data
 
-        # Save watch history
         supabase.table("watch_history").insert({
             "user_id": session["user_id"],
             "movie_id": movie_id
@@ -326,164 +312,16 @@ def watch_movie(movie_id):
         )
 
     except Exception as e:
-
         return f"Error loading movie: {e}"
 
 
-
-# =========================
-# LOGOUT
-# =========================
-
-@app.route("/logout")
-def logout():
-
-    try:
-        supabase.auth.sign_out()
-    except:
-        pass
-
-    session.clear()
-
-    return redirect(url_for("home"))
-
-
-# =========================
-# ADD TO MY LIST
-# =========================
-
-@app.route("/add/<int:movie_id>", methods=["POST"])
-def add_to_list(movie_id):
-
-    if "user_id" not in session:
-        return redirect(url_for("login"))
-
-    try:
-
-        existing = (
-            supabase
-            .table("my_list")
-            .select("*")
-            .eq("user_id", session["user_id"])
-            .eq("movie_id", movie_id)
-            .execute()
-        )
-
-        if not existing.data:
-
-            supabase.table("my_list").insert({
-                "user_id": session["user_id"],
-                "movie_id": movie_id
-            }).execute()
-
-    except Exception as e:
-        return f"Error: {e}"
-
-    return redirect(url_for("home"))
-
-
-# =========================
-# MY LIST PAGE
-# =========================
-
-@app.route("/my-list")
-def my_list():
-
-    if "user_id" not in session:
-        return redirect(url_for("login"))
-
-    try:
-
-        response = (
-            supabase
-            .table("my_list")
-            .select(
-                "movie_id, movies(title, genre, year, video_url)"
-            )
-            .eq("user_id", session["user_id"])
-            .execute()
-        )
-
-        return render_template(
-            "my_list.html",
-            items=response.data
-        )
-
-    except Exception as e:
-        return f"Error: {e}"
-
-
-# =========================
-# REMOVE FROM MY LIST
-# =========================
-
-@app.route("/remove/<int:movie_id>", methods=["POST"])
-def remove_from_list(movie_id):
-
-    if "user_id" not in session:
-        return redirect(url_for("login"))
-
-    try:
-
-        (
-            supabase
-            .table("my_list")
-            .delete()
-            .eq("user_id", session["user_id"])
-            .eq("movie_id", movie_id)
-            .execute()
-        )
-
-    except Exception as e:
-        return f"Error: {e}"
-
-    return redirect(url_for("my_list"))
-
-
-# =========================
-# WATCH MOVIE
-# =========================
-
-@app.route("/watch/<int:movie_id>")
-def watch_movie(movie_id):
-
-    try:
-
-        movie_response = (
-            supabase
-            .table("movies")
-            .select("*")
-            .eq("movie_id", movie_id)
-            .single()
-            .execute()
-        )
-
-        movie = movie_response.data
-
-        # Only save watch history if user is logged in
-        if "user_id" in session:
-
-            supabase.table("watch_history").insert({
-                "user_id": session["user_id"],
-                "movie_id": movie_id
-            }).execute()
-
-        return render_template(
-            "watch.html",
-            movie=movie
-        )
-
-    except Exception as e:
-        return f"Error: {e}"
-
-
-# =========================
+# =====================================
 # RUN FLASK
-# =========================
+# =====================================
 
 if __name__ == "__main__":
     app.run(
         host="0.0.0.0",
         port=5000,
-        debug=True
+        debug=False
     )
